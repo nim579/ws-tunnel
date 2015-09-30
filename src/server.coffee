@@ -4,13 +4,14 @@ url    = require 'url'
 WS     = require('ws').Server
 _      = require 'underscore'
 
+
 class Server
     options:
         host: '0.0.0.0'
         port: 4488
         listenerHost: '0.0.0.0'
         listenerPort: 4480
-        mask: /(\w+)\./i
+        mask: '(\\w+)\\.'
         connectTimeout: 5000
 
     constructor: (options={})->
@@ -88,9 +89,10 @@ class Server
         host = req.headers.host
         if host
             hostname = url.parse('tunn://'+host).hostname
-            namePart = hostname.match @options.mask
+            namePart = hostname.match new RegExp @options.mask
 
-            tunnelName = namePart[1]
+            tunnelName = null
+            tunnelName = namePart[1] if namePart
 
             if tunnelName and tunnel = @getTunnelByName tunnelName
                 @requestTunnel tunnel.connection, req.url, res
@@ -150,4 +152,4 @@ class Server
             error: error
 
 
-new Server()
+module.exports = Server

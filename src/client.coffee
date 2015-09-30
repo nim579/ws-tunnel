@@ -81,4 +81,5 @@ class Client
             result: if result then result else null
             error: err
 
-new Client()
+
+module.exports = Client
