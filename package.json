@@ -1,0 +1,28 @@
+{
+  "name": "ws-tunnel",
+  "version": "0.0.1",
+  "description": "Web Socket tunnel from local machine to your global server",
+  "main": "index.js",
+  "dependencies": {
+    "commander": "^2.8.1",
+    "request": "^2.64.0",
+    "underscore": "^1.8.3",
+    "ws": "^0.8.0"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.10.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nim579/ws-tunnel.git"
+  },
+  "author": "Nick Iv",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nim579/ws-tunnel/issues"
+  },
+  "homepage": "https://github.com/nim579/ws-tunnel",
+}
