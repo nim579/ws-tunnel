@@ -8,7 +8,7 @@ _       = require 'underscore'
 class Client
     options:
         localHostname: 'http://localhost:4000'
-        host: 'ws://localhost:4488'
+        host: 'localhost:4488'
         name: 'local'
         reconnectTimeout: 5000
 
@@ -19,7 +19,8 @@ class Client
         @openTunnel()
 
     openTunnel: ->
-        @_tunnel = new WS @options.host
+        host = @options.host.replace(/^(\w+):\/\//i, '').replace(/^\/\//, '')
+        @_tunnel = new WS "ws://#{host}"
 
         @_tunnel.on 'open', =>
             console.log 'Connected'
@@ -60,9 +61,10 @@ class Client
         if req.params and req.params.url
             reqUrl = url.parse req.params.url
             addr = url.resolve @options.localHostname, reqUrl.path
+            headers = if req.params.headers then req.params.headers else {}
 
             console.log addr
-            request {url: addr, encoding: null}, (err, response, body)=>
+            request {url: addr, encoding: null, headers: headers}, (err, response, body)=>
                 if err
                     console.log err
                     @response req,

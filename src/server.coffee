@@ -100,7 +100,7 @@ class Server
             tunnelName = namePart[1] if namePart
 
             if tunnelName and tunnel = @getTunnelByName tunnelName
-                @requestTunnel tunnel.connection, tunnelName, req.url, res
+                @requestTunnel tunnel.connection, tunnelName, req.url, req.headers, res
 
             else
                 @tunnelNotFound res
@@ -136,7 +136,7 @@ class Server
     getTunnelByName: (name)->
         return _.findWhere @tunnels, name: name
 
-    requestTunnel: (connection, tunnelName, url, res)->
+    requestTunnel: (connection, tunnelName, url, headers, res)->
         id = @generateId()
         startTime = new Date()
 
@@ -145,10 +145,11 @@ class Server
             method: 'request'
             params:
                 url: url
+                headers: headers or {}
 
         @once "message.#{id}", (data)=>
             @listenerResponse res, data.error, data.result
-            console.log "[#{new Date().toJSON()} (#{new Date() - startTime})] #{tunnelName}: #{url}"
+            console.log "[#{new Date().toJSON()}] (+#{new Date() - startTime}ms) #{tunnelName}: #{url}"
 
     responseTunnel: (connection, id, method, result, error=null)->
         connection.send JSON.stringify
