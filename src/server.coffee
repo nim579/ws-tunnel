@@ -57,12 +57,15 @@ class Server
                 connection.close()
 
         connection.on 'message', onMessage
-            
 
     setTunnel: (connection, data)->
         tunnel =
             name: data.params.name
             connection: connection
+
+        if @getTunnelByName tunnel.name
+            console.log 'Connection refused. Tunnel name already exists'
+            return
 
         onMessage = (message)=>
             @message connection, message
@@ -70,10 +73,12 @@ class Server
         connection.on 'close', =>
             connection.removeAllListeners()
             @tunnels = _.without @tunnels, tunnel
+            console.log "disconnected: #{tunnel.name}"
 
         connection.on 'message', onMessage
 
         @tunnels.push tunnel
+        console.log "connected: #{tunnel.name}"
 
     message: (connection, message)->
         data = {}
@@ -95,7 +100,7 @@ class Server
             tunnelName = namePart[1] if namePart
 
             if tunnelName and tunnel = @getTunnelByName tunnelName
-                @requestTunnel tunnel.connection, req.url, res
+                @requestTunnel tunnel.connection, tunnelName, req.url, res
 
             else
                 @tunnelNotFound res
@@ -131,8 +136,9 @@ class Server
     getTunnelByName: (name)->
         return _.findWhere @tunnels, name: name
 
-    requestTunnel: (connection, url, res)->
+    requestTunnel: (connection, tunnelName, url, res)->
         id = @generateId()
+        startTime = new Date()
 
         connection.send JSON.stringify
             id: id
@@ -140,9 +146,9 @@ class Server
             params:
                 url: url
 
-        console.log url
         @once "message.#{id}", (data)=>
             @listenerResponse res, data.error, data.result
+            console.log "[#{new Date().toJSON()} (#{new Date() - startTime})] #{tunnelName}: #{url}"
 
     responseTunnel: (connection, id, method, result, error=null)->
         connection.send JSON.stringify

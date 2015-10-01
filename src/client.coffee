@@ -64,6 +64,7 @@ class Client
             console.log addr
             request {url: addr, encoding: null}, (err, response, body)=>
                 if err
+                    console.log err
                     @response req,
                         code: 500
                         body: '500 Internal Server Error'
@@ -72,7 +73,7 @@ class Client
                     @response req, null,
                         code: response.statusCode
                         headers: response.headers
-                        body: body
+                        body: body.toJSON().data
 
     response: (req, err=null, result)->
         @_tunnel.send JSON.stringify
