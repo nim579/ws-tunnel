@@ -23,7 +23,14 @@ program
     .option('-m, --mask [number]', 'RegExp mask for searching tunnel name in server host')
     .option('-t, --timeout [time]', 'Connection and request timeout')
     .option('-s, --save', 'Save current options as preset', false)
+    .option('-l, --list', 'List preset settings', false)
     .parse(process.argv);
+
+if(program.list){
+    console.log('Preset in file:', presetPath);
+    console.log(preset);
+    return;
+}
 
 program = _.extend(preset, program);
 

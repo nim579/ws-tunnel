@@ -13,7 +13,6 @@ try {
     var file = fs.readFileSync(presetPath);
     preset = JSON.parse(file);
 } catch (e){}
-console.log(process.mainModule.filename)
 
 program
     .version(pkg.version)
@@ -22,7 +21,14 @@ program
     .option('-t, --tunnel [url]', 'Socket URL of tunnel')
     .option('-r, --reconnect [time]', 'Time for reconnection')
     .option('-s, --save', 'Save current options as preset', false)
+    .option('-l, --list', 'List preset settings', false)
     .parse(process.argv);
+
+if(program.list){
+    console.log('Preset in file:', presetPath);
+    console.log(preset);
+    return;
+}
 
 program = _.extend(preset, program);
 
