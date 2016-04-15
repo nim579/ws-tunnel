@@ -16,10 +16,10 @@ try {
 
 program
     .version(pkg.version)
-    .option('-n, --name [name]', 'Name of tunnel')
-    .option('-h, --localhost [url]', 'Host for tunneling')
-    .option('-t, --tunnel [url]', 'Socket URL of tunnel')
-    .option('-r, --reconnect [time]', 'Time for reconnection')
+    .option('-n, --name [name]', 'Name of tunnel', null)
+    .option('-h, --localhost [url]', 'Host for tunneling', null)
+    .option('-t, --tunnel [url]', 'Socket URL of tunnel', null)
+    .option('-r, --reconnect [time]', 'Time for reconnection', null)
     .option('-s, --save', 'Save current options as preset', false)
     .option('-l, --list', 'List preset settings', false)
     .parse(process.argv);

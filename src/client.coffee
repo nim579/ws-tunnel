@@ -17,10 +17,15 @@ class Client
         @options = _.extend {}, @options, options
 
         @openTunnel()
+        @bindExit()
 
     openTunnel: ->
-        host = @options.host.replace(/^(\w+):\/\//i, '').replace(/^\/\//, '')
-        @_tunnel = new WS "ws://#{host}"
+        host = @options.host
+
+        unless @options.host.match(/^(ws|wss):\/\//i)
+            host = "ws://" + @options.host.replace(/^(\w+):\/\//i, '').replace(/^\/\//, '')
+
+        @_tunnel = new WS host
 
         @_tunnel.on 'open', =>
             console.log 'Connected'
@@ -30,6 +35,10 @@ class Client
         @_tunnel.on 'close', =>
             @recopenTunnel()
 
+    stop: ->
+        @_tunnel?.close()
+        console.log 'Connection closed!'
+
     recopenTunnel: ->
         console.log 'Connection closed'
 
@@ -38,6 +47,18 @@ class Client
             @openTunnel()
         , @options.reconnectTimeout
 
+    bindExit: ->
+        exit = =>
+            process.removeAllListeners 'SIGINT'
+            process.removeAllListeners 'SIGTERM'
+            @stop()
+
+            console.log 'Stop process'
+            process.exit()
+
+        process.on 'SIGINT', exit
+        process.on 'SIGTERM', exit
+
     generateId: ->
         return _.uniqueId new Date().getTime() + "_"
 
@@ -45,7 +66,7 @@ class Client
         @_tunnel.send JSON.stringify
             id: @generateId()
             method: 'connect'
-            params: 
+            params:
                 name: @options.name
 
     listenRequests: ->
@@ -56,6 +77,14 @@ class Client
 
             if data.id? and data.method is 'request'
                 @request data
+
+            if data.error
+                console.log 'Error:', JSON.stringify data.error
+
+                if data.method is 'connect' and data.error.code is 'name_already_exists'
+                    console.log 'Name already exists! Change another name and restart.'
+                    @stop()
+                    process.exit()
 
     request: (req)->
         if req.params and req.params.url

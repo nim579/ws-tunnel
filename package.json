@@ -1,6 +1,6 @@
 {
   "name": "ws-tunnel",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Web Socket tunnel from local machine to your global server",
   "main": "index.js",
   "dependencies": {
@@ -14,11 +14,13 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf lib/ && exec $(npm bin)/coffee -c -o lib/ src/"
+    "build": "rm -rf lib/ && exec $(npm bin)/coffee -c -o lib/ src/",
+    "client": "./bin/client",
+    "server": "./bin/server"
   },
   "bin": {
-    "ws-tunnel": "bin/client.js",
-    "ws-tunnel-server": "bin/server.js"
+    "ws-tunnel": "bin/client",
+    "ws-tunnel-server": "bin/server"
   },
   "repository": {
     "type": "git",

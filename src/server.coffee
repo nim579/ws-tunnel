@@ -46,11 +46,18 @@ class Server
             try
                 data = JSON.parse message
 
+            clearTimeout timeout
+            connection.removeListener 'message', onMessage
+
             if data.method is 'connect' and data.params and data.params.name
-                clearTimeout timeout
-                connection.removeListener 'message', onMessage
-                @setTunnel connection, data
-                @responseTunnel connection, data.id, data.method, {}
+                if @getTunnelByName data.params.name
+                    @responseTunnel connection, data.id, data.method, null, code: 'name_already_exists'
+                    connection.close()
+                    console.log 'Connection refused. Tunnel name already exists'
+
+                else
+                    @setTunnel connection, data
+                    @responseTunnel connection, data.id, data.method, {}
 
             else
                 @responseTunnel connection, data.id, data.method, null, code: 'no_connection'
@@ -62,10 +69,6 @@ class Server
         tunnel =
             name: data.params.name
             connection: connection
-
-        if @getTunnelByName tunnel.name
-            console.log 'Connection refused. Tunnel name already exists'
-            return
 
         onMessage = (message)=>
             @message connection, message
