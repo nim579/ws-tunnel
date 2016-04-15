@@ -1,7 +1,7 @@
 {
   "name": "ws-tunnel",
   "version": "0.2.0",
-  "description": "Web Socket tunnel from local machine to your global server",
+  "description": "WebSocket tunnel from local machine to your global server.",
   "main": "index.js",
   "dependencies": {
     "commander": "^2.8.1",
