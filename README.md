@@ -14,17 +14,17 @@ Server start WebSocet server for local machine, and HTTP server for requests to 
 
 Install module and run server.
 
-Like localy npm mudule from module folder:
+Like localy npm module from module folder:
 ```
 npm run server -- {options}
 ```
 
-Like localy npm mudule:
+Like localy npm module:
 ```
 $(npm bin)/ws-tunnel-server {options}
 ```
 
-Like global mudule:
+Like global module:
 ```
 ws-tunnel-server {options}
 ```
@@ -49,17 +49,17 @@ Server open WebSocket connection with server-side instance, and requests you loc
 
 Install module and run server.
 
-Like localy npm mudule from module folder:
+Like localy npm module from module folder:
 ```
 npm run client -- {options}
 ```
 
-Like localy npm mudule:
+Like localy npm module:
 ```
 $(npm bin)/ws-tunnel {options}
 ```
 
-Like global mudule:
+Like global module:
 ```
 ws-tunnel {options}
 ```
@@ -67,8 +67,8 @@ ws-tunnel {options}
 ### Options
 
 * **-n, --name [name]** — Name of tunnel. Default `local`
-* **-h, --localhost [url]** — Host for tunneling. Default `http://locahlost:4000`
-* **-t, --tunnel [url]** — Socket URL of tunnel. Default `ws://locahlost:4488`
+* **-h, --localhost [url]** — Host for tunneling. Default `http://localhost:4000`
+* **-t, --tunnel [url]** — Socket URL of tunnel. Default `ws://localhost:4488`
 * **-r, --reconnect [time]** — Time for reconnection. Default `5000` (5 sec)
 * **-s, --save** — Save current options as preset
 * **-l, --list** — List preset settings
